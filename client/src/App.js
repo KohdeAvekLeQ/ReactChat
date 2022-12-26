@@ -52,11 +52,11 @@ export default function App() {
   // ---- RENDER ----
   return (
     <div id="App">
-      <Chat id={0} socket={socket} channel={ids[0]} position={12.5} type={'floating'} pseudo='Kohdé'/>
-      <Chat id={1} socket={socket} channel={ids[0]}  position={37.5} type={'sticked'} pseudo='Tarace'/>
+      <Chat id={0} socket={socket} channel={ids[0]} position={12.5} type={'floating'} pseudo='Pseudo1'/>
+      <Chat id={1} socket={socket} channel={ids[0]}  position={37.5} type={'sticked'} pseudo='Pseudo2'/>
 
-      <Chat id={2} socket={socket} channel={ids[1]}  position={62.5} type={'floating'} pseudo='Kohdé'/>
-      <Chat id={3} socket={socket} channel={ids[1]}  position={87.5} type={'sticked'} pseudo='Tarace'/>
+      <Chat id={2} socket={socket} channel={ids[1]}  position={62.5} type={'floating'} pseudo='Pseudo1'/>
+      <Chat id={3} socket={socket} channel={ids[1]}  position={87.5} type={'sticked'} pseudo='Pseudo2'/>
     </div>
   );
 }
