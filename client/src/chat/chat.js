@@ -2,7 +2,7 @@
 import './chat.scss';
 
 // React
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import useKeypress from 'react-use-keypress';
 
 // Comps
@@ -15,22 +15,47 @@ export default function Chat(data) {
     const [folded, setFolded] = useState(true);     // Phone folded
     const [inputFocus, setFocus] = useState(false); // Input selected
     const [msg, setMsg] = useState("");             // Message input
+    const [messages, setMessages] = useState([]);   // Messages list
 
 
     // ---- FUNCTIONS ----
     function sendMessage() {
         if(msg.length > 1) {
-            data.socket.emit('sendMessage', data.pseudo, msg);
+            data.socket.emit('newMessage', data.channel, data.pseudo, msg);
+            setMsg("");
         }
     }
     function unfoldPhone() {
         setFolded(false);
         setTimeout(() => {
-            document.getElementById('inputMsgElem').focus();
-            let elem = document.getElementById('messages');
+            document.getElementById(`inputMsg_${data.id}`).focus();
+
+            let elem = document.getElementsByClassName(`messagesDiv_${data.id}`)[0];
             elem.scrollTop = elem.scrollHeight;
         }, 0);
     }
+
+
+    // ---- Effects for socket functions ----
+    useEffect(() => {
+        // Function for global update
+        function globalSetMessage(id, messages) {
+            if(id === data.channel) {
+                setMessages(messages);
+            }
+        }
+
+        // Received functions 
+        data.socket.on('setMessages', setMessages);
+        data.socket.on('globalSetMessage', globalSetMessage);
+
+        
+        // Clean function
+        return (() => {
+            data.socket.off('setMessages', setMessages);
+            data.socket.off('globalSetMessage', globalSetMessage);
+        });
+    }, []);
 
 
     // ---- KEYS ----
@@ -47,15 +72,13 @@ export default function Chat(data) {
 
     // ---- RENDER MESSAGES ----
     let messagesDiv = [];
-    if(data.messages !== null) {
-        for (let i in data.messages) {
-            let msg = data.messages[i];
+    for (let i in messages) {
+        let msg = messages[i];
 
-            // Add message
-            messagesDiv.push(
-                <ChatMessage key={i} type={data.type} sender={msg.sender} send={msg.sender === data.pseudo} content={msg.content}/>
-            );
-        }
+        // Add message
+        messagesDiv.push(
+            <ChatMessage key={i} type={data.type} sender={msg.sender} send={msg.sender === data.pseudo} content={msg.content}/>
+        );
     }
 
 
@@ -72,14 +95,14 @@ export default function Chat(data) {
                 <div id="topChat" onClick={() => {setFolded(true);}}><span>▼ CHAT ▼</span></div>
 
                 <div id="chatContent">
-                    <div id="messages">
+                    <div id="messages" className={`messagesDiv_${data.id}`}>
                         {messagesDiv}
                     </div>
 
                     <div id="messageInput">
                         <div id="msgInputDiv">
                             <input 
-                                id='inputMsgElem'
+                                id={`inputMsg_${data.id}`}
                                 type='text' 
                                 placeholder='Type your message'
                                 value={msg}

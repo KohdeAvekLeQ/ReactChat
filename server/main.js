@@ -1,5 +1,5 @@
 // Socket server
-import { Server } from 'socket.io';
+const {Server} = require('socket.io');
 const io = new Server({
     cors: {
         origin: "*",
@@ -9,6 +9,10 @@ const io = new Server({
 });
 
 
+// Messages channels
+const Channels = require('./channels.js');
+
+
 // On new client
 io.on("connection", (socket) => {
     // Log connection
@@ -16,7 +20,21 @@ io.on("connection", (socket) => {
 
 
     // ---- CHAT EVENTS ----
-    
+    socket.on('createChannel', (id) => {
+        Channels.createChannel(id);
+        socket.emit('setMessages', []);
+        console.log(`Created channel : ${id}`);
+    });
+
+    socket.on('getMessages', (id) => {
+        socket.emit('setMessages', Channels.getMessages(id));
+        console.log(`Request for messages : ${id}`);
+    });
+
+    socket.on('newMessage', (id, pseudo, message) => {
+        console.log(`Message on channel : ${id} by ${pseudo} : '${message}'`);
+        io.sockets.emit('globalSetMessage', id, Channels.addMessage(id, pseudo, message));
+    });
     
 
     // On disconnection
@@ -26,4 +44,4 @@ io.on("connection", (socket) => {
     });
 });
 
-io.listen(8080);
+io.listen(8200);

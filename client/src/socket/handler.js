@@ -1,5 +1,5 @@
 const {io} = require("socket.io-client");
-let socket = io(window.location.hostname + ":2003");
+let socket = io(window.location.hostname + ":8200");
 
 const _socket = socket;
 export { _socket as socket };

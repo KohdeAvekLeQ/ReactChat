@@ -11,17 +11,17 @@ import {socket, socketReconnect} from './socket/handler.js';
 import Chat from './chat/chat.js';
 
 
+// ---- INIT CHAT ----
+let ids = ['209849', '2902880'];
+for(let i = 0; i < ids.length; i++) {
+  socket.emit('createChannel', ids[i]);
+}
+
+
 // APP COMPONENT
 export default function App() {
   // ---- EFFECTS ----
   useEffect(() => {
-    // Socket functions
-    
-    
-    // Socket events
-    
-  
-
     // Keys
     const keyPressHandler = (event) => {
       if (event.code === "F5" || event.code === "F11" || event.code === "F12") return;
@@ -42,25 +42,21 @@ export default function App() {
 
     // Cleanup on end
     return function cleanup() {
-      // Socket off
-      
-      
-
       // Keys / Unload
       document.removeEventListener("keydown", keyPressHandler);
       window.removeEventListener("beforeunload", unloadWarning);
     };
-  });
-  let messages = [{sender: 'Tarace', content: 'Wow incroyable'}, {sender: 'Kohdé', content: "C'est vraiment fou"}];
+  }, []);
+  
 
   // ---- RENDER ----
   return (
     <div id="App">
-      <Chat messages={messages} position={25} type={'floating'} pseudo='Kohdé'/>
+      <Chat id={0} socket={socket} channel={ids[0]} position={12.5} type={'floating'} pseudo='Kohdé'/>
+      <Chat id={1} socket={socket} channel={ids[0]}  position={37.5} type={'sticked'} pseudo='Tarace'/>
 
-      <Chat messages={messages} position={50} type={'sticked'} pseudo='Tarace'/>
-
-      <Chat messages={messages} position={75} type={'floating'} pseudo='Kohdé'/>
+      <Chat id={2} socket={socket} channel={ids[1]}  position={62.5} type={'floating'} pseudo='Kohdé'/>
+      <Chat id={3} socket={socket} channel={ids[1]}  position={87.5} type={'sticked'} pseudo='Tarace'/>
     </div>
   );
 }
