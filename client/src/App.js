@@ -1,11 +1,14 @@
 // Style
-import './App.css';
+import './App.scss';
 
 // React
 import {useState, useEffect} from 'react';
 
 // Socket
 import {socket, socketReconnect} from './socket/handler.js';
+
+// Components
+import Chat from './chat/chat.js';
 
 
 // APP COMPONENT
@@ -48,12 +51,16 @@ export default function App() {
       window.removeEventListener("beforeunload", unloadWarning);
     };
   });
-
+  let messages = [{sender: 'Tarace', content: 'Wow incroyable'}, {sender: 'Kohdé', content: "C'est vraiment fou"}];
 
   // ---- RENDER ----
   return (
     <div id="App">
-      
+      <Chat messages={messages} position={25} type={'floating'} pseudo='Kohdé'/>
+
+      <Chat messages={messages} position={50} type={'sticked'} pseudo='Tarace'/>
+
+      <Chat messages={messages} position={75} type={'floating'} pseudo='Kohdé'/>
     </div>
   );
 }

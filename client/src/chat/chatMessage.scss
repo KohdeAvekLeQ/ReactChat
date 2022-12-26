@@ -1,0 +1,51 @@
+// Msg element
+.chatMessage {
+    display: block;
+    box-sizing: border-box;
+    width: 80%;
+    padding: 1vh;
+    margin-bottom: 1vh;
+    text-align: left;
+
+    span {
+        display: block;
+        font-size: 2.2vh;
+        word-break: break-all;
+
+        &.emitter {
+            font-weight: bold;
+            margin-bottom: 0.5vh;
+            overflow: hidden;
+        }
+    }
+
+    // Sent or received message
+    &.sender {
+        background-color: var(--emittedMsg);
+
+        &.sticked {
+            border-top-left-radius: var(--msgRadiusSticked);
+            border-bottom-left-radius: var(--msgRadiusSticked);
+            margin-left: 20%;
+        }
+
+        &.floating {   
+            border-radius: var(--msgRadius);
+            margin-left: 19.5%;
+        }
+    }
+    
+    &.receiver {
+        background-color: var(--receivedMsg);
+
+        &.sticked {
+            border-top-right-radius: var(--msgRadiusSticked);
+            border-bottom-right-radius: var(--msgRadiusSticked);
+        }
+
+        &.floating {   
+            border-radius: var(--msgRadius);
+            margin-left: 0.5%;
+        }
+    }
+}
