@@ -8,9 +8,12 @@ const io = new Server({
     serveClient: false
 });
 
-
 // Messages channels
 const Channels = require('./channels.js');
+const Logs = require('./logs.js');
+
+// Config
+const config = require('./config.json');
 
 
 // On new client
@@ -23,17 +26,18 @@ io.on("connection", (socket) => {
     socket.on('createChannel', (id) => {
         Channels.createChannel(id);
         socket.emit('setMessages', []);
-        console.log(`Created channel : ${id}`);
+        
+        if(config.saveLogs) {
+            Logs.saveChannelCreation(id);
+        }
     });
-
-    socket.on('getMessages', (id) => {
-        socket.emit('setMessages', Channels.getMessages(id));
-        console.log(`Request for messages : ${id}`);
-    });
-
+    
     socket.on('newMessage', (id, pseudo, message) => {
-        console.log(`Message on channel : ${id} by ${pseudo} : '${message}'`);
         io.sockets.emit('globalSetMessage', id, Channels.addMessage(id, pseudo, message));
+
+        if(config.saveLogs) {
+            Logs.saveMessage(id, pseudo, message);
+        }
     });
     
 

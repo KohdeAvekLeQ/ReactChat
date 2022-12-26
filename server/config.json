@@ -1,0 +1,5 @@
+{
+    "saveLogs": true,
+    "pathToLogFolder": "./logs",
+    "channelsFolderInLogs": "channels"
+}
